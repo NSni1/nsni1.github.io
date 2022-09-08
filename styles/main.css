@@ -42,7 +42,7 @@ aside > img {
 	height: 100%;
 	width: 100%;
 	background: #000;
-	opacity: 0.5;
+	opacity: 0.7;
 	position: absolute;
 }
 
@@ -65,6 +65,7 @@ aside > img {
 }
 
 .help-content {
+	color: #fff;
 	font-size: 110%;
 }
 

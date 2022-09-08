@@ -5,37 +5,42 @@ class Help {
 	#status;
 	#children;
 	
-	constructor(view, help, page, target, career) {
+	constructor(view, help, page, target, career, mode, end) {
 		this.view = view;
 		this.help = help;
 		this.children = new Array();
 		this.children.push(page);
 		this.children.push(target);
 		this.children.push(career);
+		this.children.push(mode);
+		this.children.push(end);
 		this.index = 0;
 		this.status = 1;
 	};
 	
 	toggle() {
 		if (this.status) {
-			this.help.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
 			this.view.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
+			if (this.index > 0) {
+				this.children[1].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+				this.children[2].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+				this.children[3].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+				this.children[4].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+				this.children[0].animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards"});
+				this.index ^= this.index;
+			}
+			this.help.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
 			this.status ^= 1;
 		}
 		else {
 			this.help.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
-			if (this.index > 0) {
-				this.children[1].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
-				this.children[2].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
-			}
-			this.children[0].animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 250});
 			this.view.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
 			this.status ^= 1;
 		}
 	};
 	
 	next() {
-		if (this.index < 2) {
+		if (this.index < 4) {
 			this.children[this.index].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250});
 			this.children[++this.index].animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500});
 		}
@@ -150,15 +155,17 @@ class Career {
 
 class Careers {
 	#obj;
+	#title;
 	#careers;
 	#index;
 	
-	constructor(obj, sa, se, sc) {
+	constructor(obj, sa, se, sc, title) {
 		this.obj = obj;
 		this.careers = new Array();
 		this.careers[0] = sa;
 		this.careers[1] = se;
 		this.careers[2] = sc;
+		this.title = title;
 		this.index = 0;
 	};
 	
@@ -169,6 +176,7 @@ class Careers {
 			this.careers[1].hide(0);
 			this.careers[2].hide(0);
 		}
+		this.title.animate([{width: "0%"}, {width: "100%"}], {fill: "forwards", duration: 750, easing: "ease-out"})
 		this.careers[0].show();
 	};
 	
@@ -257,12 +265,20 @@ class Victims {
 	};
 };
 
-const help = new Help(document.getElementById("view"), document.getElementById("help"), document.getElementById("page-navigation"), document.getElementById("target-navigation"), document.getElementById("career-navigation"));
+let page_index = 0;
+let victim_index = 0;
+let in_help = 0;
+let mode = 0;
+const title_e = document.getElementById("title");
+let dark_images = document.getElementsByClassName("imgb");
+let light_images = document.getElementsByClassName("imgw");
+
+const help = new Help(document.getElementById("view"), document.getElementById("help"), document.getElementById("page-navigation"), document.getElementById("target-navigation"), document.getElementById("career-navigation"), document.getElementById("mode-navigation"), document.getElementById("navigation-end"));
 
 const explanation = new Explanation(document.getElementById("expl"), document.getElementById("expl-title"));
 
 const careers = new Careers(document.getElementById("careers"),
-							new Career(document.getElementById("security-analyst"), 
+							new Career(document.getElementById("security-analyst"),
 									document.getElementById("sa-first"),
 									document.getElementById("sa-second"),
 									document.getElementById("sa-third"),
@@ -276,7 +292,8 @@ const careers = new Careers(document.getElementById("careers"),
 										document.getElementById("pen-first"),
 										document.getElementById("pen-second"),
 										document.getElementById("pen-third"),
-										document.getElementById("pen-fourth")));
+										document.getElementById("pen-fourth")),
+							document.getElementById("careers-title"));
 
 const victims = new Victims(document.getElementById("victim"),
 							document.getElementById("victim-title"),
@@ -284,13 +301,10 @@ const victims = new Victims(document.getElementById("victim"),
 							new Victim(document.getElementById("va")),
 							new Victim(document.getElementById("vg")));
 
-var page_index = 0;
-var victim_index = 0;
-var in_help = 0;
 
 window.onload = function() {
 	document.body.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", easing: "linear", duration: 1000});
-	const title = new Title(document.getElementById("title"), document.getElementById("group"), document.getElementById("ctn"));
+	const title = new Title(title_e, document.getElementById("group"), document.getElementById("ctn"));
 	let h;
 	document.addEventListener("keydown", function f(evt) {
 		if (evt.code !== "Enter")
@@ -384,6 +398,29 @@ window.onload = function() {
 				case "KeyH":
 					help.toggle();
 					in_help ^= 1;
+					break;
+				case "Semicolon":
+					if (in_help) break;
+					if (mode) {
+						document.body.animate([{}, {background: "#fff", color: "#000"}], {fill: "forwards", duration: 500});
+						title_e.classList.remove("light-border-bottom");
+						title_e.classList.add("dark-border-bottom");
+						for (const e of dark_images)
+							e.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 500});
+						for (const e of light_images)
+							e.animate([{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 500});
+						--mode;
+					}
+					else {
+						document.body.animate([{}, {background: "#555", color: "#fff"}], {fill: "forwards", duration: 500});
+						title_e.classList.add("light-border-bottom");
+						title_e.classList.remove("dark-border-bottom");
+						for (const e of dark_images)
+							e.animate([{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 500});
+						for (const e of light_images)
+							e.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 500});
+						++mode;
+					}
 					break;
 				default:
 					break;

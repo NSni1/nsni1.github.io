@@ -2,12 +2,40 @@
 	margin: 0 !important;
 }
 
-a {
-	color: #000;
-}
-
 section {
 	position: absolute;
+}
+
+.light {
+	color: #000;
+	background: #fff;
+	border-bottom-color: #000 !important;
+}
+
+.dark {
+	color: #fff;
+	background: #555;
+	border-bottom-color: #fff !important;
+}
+
+@keyframes lbb {
+	to {
+		border-bottom-color: #000 !important;
+	}
+}
+
+@keyframes dbb {
+	to {
+		border-bottom-color: #fff !important;
+	}
+}
+
+.light-border-bottom {
+	animation: 1s linear 0s 1 normal forwards running lbb;
+}
+
+.dark-border-bottom {
+	animation: 1s linear 0s 1 normal forwards running dbb;
 }
 
 html, body {
@@ -17,6 +45,7 @@ html, body {
 	height: 100vh;
 	width: 100vw;
 	user-select: none;
+	color: #fff;
 }
 
 aside {
@@ -41,8 +70,7 @@ aside > img {
 #background {
 	height: 100%;
 	width: 100%;
-	background: #000;
-	opacity: 0.7;
+	background: #555;
 	position: absolute;
 }
 
@@ -74,7 +102,7 @@ aside > img {
 	z-index: 1;
 }
 
-#target-navigation, #career-navigation {
+#target-navigation, #career-navigation, #mode-navigation, #navigation-end {
 	opacity: 0;
 	z-index: 0;
 }
@@ -100,7 +128,7 @@ aside > img {
 	justify-self: center;
 	align-self: center;
 	position: absolute;
-	border-bottom: 2px solid black;
+	border-bottom: 2px solid
 }
 
 #title > h1 {
@@ -126,7 +154,7 @@ aside > img {
 	transform: translate(-20px, 10px);
 	height: 37.591%;
 	width: 21.962%;
-	border: 2px solid black;
+	border: 2px solid #000;
 	border-radius: 10px;
 }
 
@@ -233,10 +261,18 @@ aside > img {
 }
 
 #victim-items > div > img {
-	position: relative;
-	top: 26%;
+	position: absolute;
+	top: 35%;
 	width: 59.534%;
 	justify-self: center;
+}
+
+.imgb {
+	opacity: 1;
+}
+
+.imgw {
+	opacity: 0;
 }
 
 img[alt="govt"] {
@@ -269,7 +305,7 @@ img[alt="govt"] {
 }
 
 .career-wage > a {
-	color: #000;
+	color: inherit;
 	font-size: xx-large;
 }
 
@@ -300,10 +336,18 @@ img[alt="govt"] {
 	height: 60%;
 	width: 90%;
 }
-#careers-title {
+#careers-ttl {
+	justify-self: center;
+	position: absolute;
 	transform: translateY(-5%);
 }
-#careers > div {
+#careers-title {
+	text-align: center;
+	width: 0%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.careers-item {
 	position: absolute;
 	display: grid;
 	width: 100%;

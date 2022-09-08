@@ -16,10 +16,9 @@ html, body {
 }
 
 aside {
-	visibility: hidden;
-	justify-self: right;
-	align-self: center;
-	transform: translateX(-20px);
+	opacity: 0;
+	font-size: 100%;
+	transform: translateX(2%);
 }
 
 aside > img {
@@ -27,7 +26,57 @@ aside > img {
 	width: 50px;
 }
 
+#help {
+	z-index: 0;
+	opacity: 0;
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+}
+
+#background {
+	height: 100%;
+	width: 100%;
+	background: #000;
+	opacity: 0.5;
+	position: absolute;
+}
+
+#box {
+	background: #fff;
+	justify-self: center;
+	align-self: center;
+	position: absolute;
+	height: 70%;
+	width: 50%;
+	display: grid;
+}
+
+.help-navigation-window {
+	justify-self: center;
+	align-self: center;
+	position: absolute;
+}
+
+#page-navigation {
+	opacity: 1;
+	z-index: 1;
+}
+
+#target-navigation, #career-navigation {
+	opacity: 0;
+	z-index: 0;
+}
+
+.help-content {
+	justify-self: center;
+	align-self: center;
+	font-size: 120%;
+}
+
 #view {
+	z-index: 1;
+	position: absolute;
 	height: 100vh;
 	width: 100vw;
 	display: grid;

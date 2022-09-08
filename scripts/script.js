@@ -1,9 +1,48 @@
-const title 		= document.getElementById("title");
-const group			= document.getElementById("group");
-const ctn 			= document.getElementById("ctn");
-const expl 			= document.getElementById("expl");
-const expl_title	= document.getElementById("expl-title");
-const expl_text		= document.getElementById("expl-text");
+class Help {
+	#view;
+	#help;
+	#index;
+	#status;
+	#children;
+	
+	constructor(view, help, page, target, career) {
+		this.view = view;
+		this.help = help;
+		this.children = new Array();
+		this.children.push(page);
+		this.children.push(target);
+		this.children.push(career);
+		this.index = 0;
+		this.status = 1;
+	};
+	
+	toggle() {
+		if (this.status) {
+			this.help.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
+			this.view.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
+			this.status ^= 1;
+		}
+		else {
+			this.help.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
+			this.view.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
+			this.status ^= 1;
+		}
+	};
+	
+	next() {
+		if (this.index < 2) {
+			this.children[this.index].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250});
+			this.children[++this.index].animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500});
+		}
+	};
+	
+	previous() {
+		if (this.index > 0) {
+			this.children[this.index].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250});
+			this.children[--this.index].animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500});
+		}
+	};
+};
 
 class Title {
 	#obj;
@@ -16,10 +55,46 @@ class Title {
 		this.obj = obj;
 		this.grp = grp;
 		this.ctn = ctn;
-		this.on = false;
+		this.on = 1;
 	
-		this.grp.animate([{transform: "translateY(-50%)"}, {transform: "translateY(0%)"}], {fill: "forwards", duration: 1000, delay: 1000});
-		this.anim = this.ctn.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", direction: "alternate", fill: "forwards", delay: 2000, duration: 1000});
+		this.grp.animate([{transform: "translateY(-50%)", opacity: 0}, {transform: "translateY(0%)", opacity: 1}], {fill: "forwards", duration: 1000, delay: 1000});
+		this.anim = this.ctn.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", direction: "alternate", fill: "forwards", delay: 2000, duration: 1000, iterations: Infinity});
+	};
+	
+	show() {
+		this.anim = this.ctn.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 1000, delay: 1000, direction: "alternate", iterations: Infinity});
+		this.obj.animate([{}, {transform: "initial"}], {fill: "forwards", duration: 500, easing: "ease-out"});
+		this.on ^= 1;
+	};
+	
+	hide() {
+		this.anim.effect = new KeyframeEffect(this.ctn, [{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 250});
+		this.obj.animate([{}, {transform: "translateY(-40vh)"}], {fill: "forwards", easing: "ease-out", duration: 1000});
+		this.on ^= 1;
+	};
+	
+	relocate() {
+		if (this.on) return;
+		this.obj.animate([{}, {transform: "translateY(-40vh)"}], {fill: "forwards", easing: "ease-out", duration: 250});
+	};
+};
+
+class Explanation {
+	#obj;
+	#title;
+	
+	constructor(obj, title) {
+		this.obj = obj;
+		this.title = title;
+	};
+	
+	show() {
+		this.obj.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 1000});
+		this.title.animate([{width: "0%"}, {width: "100%"}], {fill: "forwards", duration: 750});
+	};
+	
+	hide() {
+		this.obj.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
 	};
 };
 
@@ -177,6 +252,10 @@ class Victims {
 	};
 };
 
+const help = new Help(document.getElementById("view"), document.getElementById("help"), document.getElementById("page-navigation"), document.getElementById("target-navigation"), document.getElementById("career-navigation"));
+
+const explanation = new Explanation(document.getElementById("expl"), document.getElementById("expl-title"));
+
 const careers = new Careers(document.getElementById("careers"),
 							new Career(document.getElementById("security-analyst"), 
 									document.getElementById("sa-first"),
@@ -202,41 +281,34 @@ const victims = new Victims(document.getElementById("victim"),
 
 var page_index = 0;
 var victim_index = 0;
+var in_help = 0;
 
-
-// Make sure the document is loaded.
 window.onload = function() {
-	// Show the document
 	document.body.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", easing: "linear", duration: 1000});
-	// Early credits
-	group.animate([{transform: "translateY(-50%)", opacity: 0}, {transform: "translateY(0%)", opacity: 1}], {duration: 1000, fill: "forwards", delay: 1000});
-	let c = ctn.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 1000, direction: "alternate", iterations: Infinity, delay: 2000});
+	const title = new Title(document.getElementById("title"), document.getElementById("group"), document.getElementById("ctn"));
 	document.addEventListener("keydown", function f(evt) {
 		if (evt.code !== "Enter")
 			return;
-		c.cancel();
-		ctn.animate([{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 350});
-		title.animate([{}, {transform: "translateY(-40vh)"}], {fill: "forwards", easing: "ease-out", duration: 1000});
-		expl.animate([{opacity: 0}, {opacity: 1, zIndex: 1}], {fill: "forwards", delay: 1000, duration: 1000});
-		expl_title.animate([{}, {width: "100%"}], {fill: "forwards", delay: 1000, duration: 1000});
+		title.hide();
+		explanation.show();
+		h.animate([{opacity: 0}, {opacity: 1}], {direction: "alternate", iterations: Infinity, duration: 1000});
 		document.removeEventListener("keydown", f);
 		++page_index;
+		window.onresize = () => title.relocate();
 		document.addEventListener("keydown", function(evt) {
 			switch (evt.code) {
 				case "Enter":
 					if (page_index !== 0) break;
 					++page_index;
-					c.effect = new KeyframeEffect(ctn, [{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 250});
-					ctn.animate([{opacity: 1}, {opacity: 0}], {fill: "forwards", duration: 350});
-					title.animate([{}, {transform: "translateY(-40vh)"}], {fill: "forwards", easing: "ease-out", duration: 1000});
-					expl.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", delay: 1000, duration: 1000});
-					expl_title.animate([{width: "0%"}, {width: "100%"}], {fill: "forwards", delay: 1000, duration: 1000});
+					title.hide();
+					explanation.show();
 					break;
 				case "ArrowDown":
+					if (in_help) break;
 					switch (page_index) {
 						case 1:
 							++page_index;
-							expl.animate([{}, {opacity: 0, zIndex: "auto"}], {fill: "forwards", duration: 250, easing: "ease-out"});
+							explanation.hide();
 							victims.show();
 							break;
 						case 2:
@@ -247,20 +319,17 @@ window.onload = function() {
 					}
 					break;
 				case "ArrowUp":
+					if (in_help) break;
 					switch (page_index) {
-						case 0:
-							break;
 						case 1:
 							--page_index;
-							expl.animate([{}, {opacity: 0, zIndex: "auto"}], {fill: "forwards", duration: 250});
-							c = ctn.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 1000, delay: 1000, direction: "alternate", iterations: Infinity});
-							title.animate([{}, {transform: "initial"}], {fill: "forwards", duration: 500, easing: "ease-out"});
+							explanation.hide();
+							title.show();
 							break;
 						case 2:
 							--page_index;
 							victims.hide();
-							expl.animate([{opacity: 0}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 1000, easing: "ease-out"});
-							expl_title.animate([{width: "0%"}, {width: "100%"}], {fill: "forwards", duration: 750});
+							explanation.show();
 							break;
 						case 3:
 							--page_index;
@@ -270,28 +339,44 @@ window.onload = function() {
 					}
 					break;
 				case "ArrowRight":
-					if (page_index === 2) {
-						victims.next();
+					console.log(in_help);
+					if (!in_help) {
+						if (page_index === 2) {
+							victims.next();
+						}
+						else if (page_index === 3) {
+							careers.next();
+						}
 					}
-					else if (page_index === 3) {
-						careers.next();
+					else {
+						help.next();
 					}
 					break;
 				case "ArrowLeft":
-					if (page_index === 2) {
-						victims.previous();
+					if (!in_help) {
+						if (page_index === 2) {
+							victims.previous();
+						}
+						else if (page_index === 3) {
+							careers.previous();
+						}
 					}
-					else if (page_index === 3) {
-						careers.previous();
+					else {
+						help.previous();
 					}
 					break;
-				case "Equal":
+				case "Period":
 					if (page_index === 3)
 						careers.current().next();
 					break;
-				case "Minus":
+				case "Comma":
 					if (page_index === 3)
 						careers.current().previous();
+					break;
+				case "KeyH":
+					help.toggle();
+					in_help ^= 1;
+					break;
 				default:
 					break;
 			}
@@ -303,10 +388,13 @@ window.onload = function() {
 	window.onfocus = function() {
 		document.title = "Cyber Security";
 	}
-	const waaaaah = document.getElementsByTagName("p");
-	for (const i of waaaaah) {
-		i.addEventListener("click", function() {
-			navigator.clipboard.writeText(i.innerHTML).then(() => document.getElementById("alert").children[0].innerHTML = "Copied");
+	let t;
+	const paragraphs = document.getElementsByTagName("p");
+	for (const e of paragraphs) {
+		e.onclick = () => navigator.clipboard.writeText(e.innerHTML).then(() => {
+			clearTimeout(t);
+			document.title = "Copied!";
+			t = setTimeout(() => document.title = "Cyber Security", 500)
 		});
 	}
 };

@@ -24,6 +24,11 @@ class Help {
 		}
 		else {
 			this.help.animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250, easing: "ease-out"});
+			if (this.index > 0) {
+				this.children[1].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+				this.children[2].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards"});
+			}
+			this.children[0].animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 250});
 			this.view.animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500, easing: "ease-out"});
 			this.status ^= 1;
 		}
@@ -286,12 +291,13 @@ var in_help = 0;
 window.onload = function() {
 	document.body.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", easing: "linear", duration: 1000});
 	const title = new Title(document.getElementById("title"), document.getElementById("group"), document.getElementById("ctn"));
+	let h;
 	document.addEventListener("keydown", function f(evt) {
 		if (evt.code !== "Enter")
 			return;
 		title.hide();
 		explanation.show();
-		h.animate([{opacity: 0}, {opacity: 1}], {direction: "alternate", iterations: Infinity, duration: 1000});
+		const h = document.getElementById("h").animate([{opacity: 0}, {opacity: 1}], {direction: "alternate", iterations: Infinity, duration: 1000});
 		document.removeEventListener("keydown", f);
 		++page_index;
 		window.onresize = () => title.relocate();
@@ -302,6 +308,7 @@ window.onload = function() {
 					++page_index;
 					title.hide();
 					explanation.show();
+					h.effect = new KeyframeEffect(document.getElementById("h"), [{opacity: 0}, {opacity: 1}], {fill: "forwards", direction: "alternate", duration: 1000, iterations: Infinity});
 					break;
 				case "ArrowDown":
 					if (in_help) break;
@@ -325,6 +332,7 @@ window.onload = function() {
 							--page_index;
 							explanation.hide();
 							title.show();
+							h.effect = new KeyframeEffect(document.getElementById("h"), [{}, {opacity: 0}], {fill: "forwards", duration: 250});
 							break;
 						case 2:
 							--page_index;

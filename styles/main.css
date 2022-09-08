@@ -2,6 +2,10 @@
 	margin: 0 !important;
 }
 
+a {
+	color: #000;
+}
+
 section {
 	position: absolute;
 }
@@ -56,6 +60,12 @@ aside > img {
 	justify-self: center;
 	align-self: center;
 	position: absolute;
+	height: 7%;
+	display: grid;
+}
+
+.help-content {
+	font-size: 110%;
 }
 
 #page-navigation {
@@ -260,6 +270,14 @@ img[alt="govt"] {
 .career-wage > a {
 	color: #000;
 	font-size: xx-large;
+}
+
+.career-preq-heading {
+	font-size: 130%;
+}
+
+.career-list-item {
+	padding: 2% 0;
 }
 
 .career-heading {

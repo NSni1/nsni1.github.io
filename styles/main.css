@@ -103,7 +103,7 @@ aside > img {
 	z-index: 1;
 }
 
-#target-navigation, #career-navigation, #mode-navigation, #navigation-end {
+#target-navigation, #career-navigation, #mode-navigation, #lang-navigation, #navigation-end {
 	opacity: 0;
 	z-index: 0;
 }

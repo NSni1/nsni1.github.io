@@ -7,7 +7,8 @@ What actually is this?
 CREDITS
 =======
 group_37 = {
-  syahsabili_fithra_nasution          = "Web Developer",
-  muhammad_ezy_hagana_sembiring       = "Proposal Writer",
-
+	syahsabili_fithra_nasution  = "Web Developer",
+	ezy_hagana_sembiring       	= "Proposal Writer",
+	jedlin_gabriel_simbolon		= "Translator 1",
+	muhammad_ambaril			= "Translator 2"
 };

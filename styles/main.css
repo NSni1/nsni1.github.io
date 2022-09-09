@@ -38,7 +38,7 @@ section {
 	animation: 1s linear 0s 1 normal forwards running dbb;
 }
 
-html, body {
+body {
 	overflow: hidden;
 	font-family: monospace;
 	display: grid;
@@ -46,6 +46,7 @@ html, body {
 	width: 100vw;
 	user-select: none;
 	color: #fff;
+	opacity: 0;
 }
 
 aside {
@@ -140,7 +141,7 @@ aside > img {
 	opacity: 0;
 }
 
-#title > pre {
+#title > p {
 	text-align: center;
 	opacity: 0;
 	transform: translateY(50px);

@@ -5,7 +5,7 @@ class Help {
 	#status;
 	#children;
 	
-	constructor(view, help, page, target, career, mode, end) {
+	constructor(view, help, page, target, career, mode, lang, end) {
 		this.view = view;
 		this.help = help;
 		this.children = new Array();
@@ -13,6 +13,7 @@ class Help {
 		this.children.push(target);
 		this.children.push(career);
 		this.children.push(mode);
+		this.children.push(lang);
 		this.children.push(end);
 		this.index = 0;
 		this.status = 1;
@@ -40,7 +41,7 @@ class Help {
 	};
 	
 	next() {
-		if (this.index < 4) {
+		if (this.index < 5) {
 			this.children[this.index].animate([{}, {opacity: 0, zIndex: 0}], {fill: "forwards", duration: 250});
 			this.children[++this.index].animate([{}, {opacity: 1, zIndex: 1}], {fill: "forwards", duration: 500});
 		}
@@ -272,8 +273,9 @@ let mode = 0;
 const title_e = document.getElementById("title");
 let dark_images = document.getElementsByClassName("imgb");
 let light_images = document.getElementsByClassName("imgw");
+const lang = document.body.getAttribute("lang");
 
-const help = new Help(document.getElementById("view"), document.getElementById("help"), document.getElementById("page-navigation"), document.getElementById("target-navigation"), document.getElementById("career-navigation"), document.getElementById("mode-navigation"), document.getElementById("navigation-end"));
+const help = new Help(document.getElementById("view"), document.getElementById("help"), document.getElementById("page-navigation"), document.getElementById("target-navigation"), document.getElementById("career-navigation"), document.getElementById("mode-navigation"), document.getElementById("lang-navigation"), document.getElementById("navigation-end"));
 
 const explanation = new Explanation(document.getElementById("expl"), document.getElementById("expl-title"));
 
@@ -420,6 +422,14 @@ window.onload = function() {
 						for (const e of light_images)
 							e.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", duration: 500});
 						++mode;
+					}
+					break;
+				case "KeyT":
+					if (lang === "en") {
+						window.location.assign("id_index.html");
+					}
+					else {
+						window.location.assign("index.html");
 					}
 					break;
 				default:

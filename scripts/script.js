@@ -307,7 +307,6 @@ const victims = new Victims(document.getElementById("victim"),
 window.onload = function() {
 	document.body.animate([{opacity: 0}, {opacity: 1}], {fill: "forwards", easing: "linear", duration: 1000});
 	const title = new Title(title_e, document.getElementById("group"), document.getElementById("ctn"));
-	let h;
 	document.addEventListener("keydown", function f(evt) {
 		if (evt.code !== "Enter")
 			return;
